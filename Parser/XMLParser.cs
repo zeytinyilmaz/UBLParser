@@ -271,8 +271,10 @@ namespace Parser
                     var i = item;
                     if (item.Key.IndexOf("_Sayac") == -1)
                     {
+                        progressBar1.Maximum = item.Value;
                         for (global::System.Int32 j = 1; j <= item.Value; j++)
                         {
+                            progressBar1.Value += 1;
                             var dizin = item.Key.ToString() + j.ToString();
                             ziplList.Add(dizin + ".zip");
                             zipIslem.dizinZiple(kayitYolu + @"\" + dizin, kayitYolu + @"\" + dizin + ".zip");
