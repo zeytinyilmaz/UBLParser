@@ -38,6 +38,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btnKaydet = new System.Windows.Forms.Button();
             this.sayac = new System.Windows.Forms.NumericUpDown();
+            this.chck_asamaliAyiklama = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.sayac)).BeginInit();
             this.SuspendLayout();
             // 
@@ -129,12 +130,25 @@
             0,
             0});
             // 
+            // chck_asamaliAyiklama
+            // 
+            this.chck_asamaliAyiklama.AutoSize = true;
+            this.chck_asamaliAyiklama.Checked = true;
+            this.chck_asamaliAyiklama.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chck_asamaliAyiklama.Location = new System.Drawing.Point(16, 102);
+            this.chck_asamaliAyiklama.Name = "chck_asamaliAyiklama";
+            this.chck_asamaliAyiklama.Size = new System.Drawing.Size(169, 17);
+            this.chck_asamaliAyiklama.TabIndex = 10;
+            this.chck_asamaliAyiklama.Text = "Aşamalı Ayıklama ve Sıkıştırma";
+            this.chck_asamaliAyiklama.UseVisualStyleBackColor = true;
+            // 
             // Ayarlar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(553, 151);
+            this.Controls.Add(this.chck_asamaliAyiklama);
             this.Controls.Add(this.sayac);
             this.Controls.Add(this.btnKaydet);
             this.Controls.Add(this.label3);
@@ -169,5 +183,6 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnKaydet;
         private System.Windows.Forms.NumericUpDown sayac;
+        private System.Windows.Forms.CheckBox chck_asamaliAyiklama;
     }
 }

@@ -58,5 +58,17 @@ namespace Parser.Properties {
                 this["paketSayisi"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool asamaliAyiklama {
+            get {
+                return ((bool)(this["asamaliAyiklama"]));
+            }
+            set {
+                this["asamaliAyiklama"] = value;
+            }
+        }
     }
 }

@@ -50,12 +50,186 @@ namespace Parser
 
                 liste = new Dictionary<string, List<string>>();
                 zipIslem = new ZipIslem();
+
+                if (Properties.Settings.Default.asamaliAyiklama)
+                {
+                    btnAyikla.Visible = true;
+                    btnTara.Visible = true; 
+                    btnziple.Visible = true;
+                    btn_taraveAyikla.Visible = false;
+                }
+                else
+                {
+                    btnAyikla.Visible = false;
+                    btnTara.Visible = false;
+                    btnziple.Visible = false;
+                    btn_taraveAyikla.Visible = true;
+                }
             }
             catch (Exception a)
             {
-
-                MessageBox.Show(a.ToString());
+                throw a;
             }
+        }
+        void tara()
+        {
+            try
+            {
+                ayiklandimi = false;
+                agacListe.Nodes.Clear();
+                dosya = new Dosya();
+
+                dosya.konum = Properties.Settings.Default.TaramaNoktasi.ToString();
+
+                liste = dosya.dosayListesi();
+
+                foreach (var item2 in liste)
+                {
+                    TreeNode node = new TreeNode(item2.Key.ToString() + " (" + item2.Value.Count.ToString() + ")");
+                    listeyeEkle(item2.Value, node);
+                    agacListe.Nodes.Add(node);
+                }
+
+            }
+            catch (Exception a)
+            {
+                throw a;
+            }
+        }
+        void ayikla()
+        {
+            try
+            {
+                if (liste == null)
+                {
+                    MessageBox.Show("Taranmış dosya listesi boş! \n Öncelikle tarama yapmalısınız.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                this.senaryoSayaci.Clear();
+                int paketSayisi = Convert.ToInt32(Properties.Settings.Default.paketSayisi); 
+                string cikarmaYolu = "";
+                string tmp = Properties.Settings.Default.KayitYolu + @"\tmp";
+                string kayitYolu = Properties.Settings.Default.KayitYolu;
+                if (Directory.Exists(tmp) == false)
+                {
+                    Directory.CreateDirectory(tmp);
+                }
+
+
+                progressBar1.Maximum = 0;
+                foreach (var item in liste)
+                {
+                    progressBar1.Maximum += item.Value.Count;
+                }
+                foreach (var item in liste)
+                {
+
+                    if (item.Key == "zip")
+                    {
+                        statusTxt.Text = "Zipler işleniyor ...";
+                        foreach (var zipler in item.Value)
+                        {
+                            progressBar1.Value += 1;
+                            foreach (var item2 in zipIslem.zipdenCikar(zipler.ToString(), tmp))
+                            {
+                                statusTxt.Text = item2.ToString();
+                                genelAmacli.xmlAyikla(
+                                    ref this.senaryoSayaci,
+                                    kayitYolu,
+                                    tmp + @"\" + item2,
+                                    cikarmaYolu,
+                                    tmp + @"\" + item2,
+                                    new Dosya(),
+                                    paketSayisi
+                                );
+                                File.Delete(tmp + @"\" + item2);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        statusTxt.Text = "Zarflar işleniyor";
+                        foreach (var item2 in item.Value)
+                        {
+                            statusTxt.Text = item2.ToString();
+                            progressBar1.Value += 1;
+                            genelAmacli.xmlAyikla(
+                                        ref this.senaryoSayaci,
+                                        kayitYolu,
+                                        tmp + @"\" + item2,
+                                        cikarmaYolu,
+                                        item2,
+                                        new Dosya(),
+                                        paketSayisi
+                                    );
+
+                        }
+                    }
+                }
+                Directory.Delete(tmp, true);
+
+
+                #region zipleme
+                List<string> ziplList = new List<string>();
+                foreach (var item in senaryoSayaci)
+                {
+                    var i = item;
+                    if (item.Key.IndexOf("_Sayac") == -1)
+                    {
+                        for (global::System.Int32 j = 1; j <= item.Value; j++)
+                        {
+                            var dizin = item.Key.ToString() + j.ToString();
+                            ziplList.Add(dizin);
+                        }
+                    }
+                }
+                #endregion
+
+                TreeNode node = new TreeNode("Yeni saklama dizinleri (" + ziplList.Count.ToString() + ")");
+                listeyeEkle(ziplList, node);
+                agacListe.Nodes.Add(node);
+
+                ayiklandimi = true;
+                statusTxt.Text = "Bitti";
+                
+            }
+            catch (Exception sas)
+            {
+                throw sas;
+            }
+        }
+        void ziple()
+        {
+            if (ayiklandimi == false)
+            {
+                MessageBox.Show("Belgeler ayıklanmamış veya hazır değil!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            string tmp = Properties.Settings.Default.KayitYolu + @"\tmp";
+            string kayitYolu = Properties.Settings.Default.KayitYolu;
+            #region zipleme
+            List<string> ziplList = new List<string>();
+            foreach (var item in senaryoSayaci)
+            {
+                var i = item;
+                if (item.Key.IndexOf("_Sayac") == -1)
+                {
+                    progressBar1.Maximum = item.Value;
+                    progressBar1.Value = 0;
+                    for (global::System.Int32 j = 1; j <= item.Value; j++)
+                    {
+                        progressBar1.Value += 1;
+                        var dizin = item.Key.ToString() + j.ToString();
+                        ziplList.Add(dizin + ".zip");
+                        zipIslem.dizinZiple(kayitYolu + @"\" + dizin, kayitYolu + @"\" + dizin + ".zip");
+                        Directory.Delete(kayitYolu + @"\" + dizin, true);
+                    }
+                }
+            }
+            #endregion
+            TreeNode node = new TreeNode("Yeni saklama dosyaları (" + ziplList.Count.ToString() + ")");
+            listeyeEkle(ziplList, node);
+            agacListe.Nodes.Add(node);
         }
         private void konumuKaydet(string konum, Konumlar konumTipi)
         {
@@ -115,25 +289,13 @@ namespace Parser
         {
             try
             {
-                ayiklandimi = false;
-                agacListe.Nodes.Clear();   
-                dosya = new Dosya();
-
-                dosya.konum = Properties.Settings.Default.TaramaNoktasi.ToString();
-
-                liste = dosya.dosayListesi();
-
-                foreach (var item2 in liste)
-                {
-                    TreeNode node = new TreeNode(item2.Key.ToString() + " (" + item2.Value.Count.ToString() + ")");
-                    listeyeEkle(item2.Value, node);
-                    agacListe.Nodes.Add(node);
-                }
-
+                tara();
+                MessageBox.Show("İşlem tamamlandı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (Exception a)
+            catch (Exception ex)
             {
-                MessageBox.Show(a.Message.ToString(), "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                statusTxt.Text = ex.Message.ToString();
+                MessageBox.Show(ex.Message.ToString(), "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         
@@ -141,104 +303,13 @@ namespace Parser
         {
             try
             {
-                if (liste == null)
-                {
-                    MessageBox.Show("Taranmış dosya listesi boş! \n Öncelikle tarama yapmalısınız.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                this.senaryoSayaci.Clear();
-                int paketSayisi = Convert.ToInt32(Properties.Settings.Default.paketSayisi);
-                string dizinid = "";
-                string cikarmaYolu = "";
-                string tmp = Properties.Settings.Default.KayitYolu + @"\tmp";
-                string kayitYolu = Properties.Settings.Default.KayitYolu;
-                if (Directory.Exists(tmp) == false)
-                {
-                    Directory.CreateDirectory(tmp);
-                }
-                
-
-                progressBar1.Maximum = 0;
-                foreach (var item in liste)
-                {
-                    progressBar1.Maximum += item.Value.Count;
-                }
-                foreach (var item in liste)
-                {
-                    
-                        if (item.Key == "zip")
-                        {
-                            statusTxt.Text = "Zipler işleniyor ...";
-                            foreach (var zipler in item.Value)
-                            {
-                            progressBar1.Value += 1;
-                                foreach (var item2 in zipIslem.zipdenCikar(zipler.ToString(), tmp))
-                                {
-                                statusTxt.Text = item2.ToString();
-                                    genelAmacli.xmlAyikla(
-                                        ref this.senaryoSayaci,
-                                        kayitYolu,
-                                        tmp + @"\" + item2,
-                                        cikarmaYolu,
-                                        tmp + @"\" + item2,
-                                        new Dosya(),
-                                        paketSayisi                                        
-                                    );
-                                    File.Delete(tmp + @"\" + item2);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            statusTxt.Text = "Zarflar işleniyor";
-                            foreach (var item2 in item.Value)
-                            {
-                            statusTxt.Text = item2.ToString();
-                            progressBar1.Value += 1;
-                            genelAmacli.xmlAyikla(
-                                        ref this.senaryoSayaci,
-                                        kayitYolu,
-                                        tmp + @"\" + item2,
-                                        cikarmaYolu,
-                                        item2,
-                                        new Dosya(),
-                                        paketSayisi
-                                    );
-
-                            }
-                        }
-                }
-                Directory.Delete(tmp, true);
-
-
-                #region zipleme
-                List<string> ziplList = new List<string>();
-                foreach (var item in senaryoSayaci)
-                {
-                    var i = item;
-                    if (item.Key.IndexOf("_Sayac") == -1)
-                    {
-                        for (global::System.Int32 j = 1; j <= item.Value; j++)
-                        {
-                            var dizin = item.Key.ToString() + j.ToString();
-                            ziplList.Add(dizin );
-                        }
-                    }
-                }
-                #endregion
-
-                TreeNode node = new TreeNode("Yeni saklama dizinleri (" + ziplList.Count.ToString() + ")");
-                listeyeEkle(ziplList, node);
-                agacListe.Nodes.Add(node);
-
-                ayiklandimi = true;
-                statusTxt.Text = "Bitti";
+                ayikla();
                 MessageBox.Show("İşlem tamamlandı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            catch (Exception sas)
+            catch (Exception ex)
             {
-                statusTxt.Text = sas.Message.ToString();
-                MessageBox.Show(sas.Message.ToString());
+                statusTxt.Text = ex.Message.ToString();
+                MessageBox.Show(ex.Message.ToString(), "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -257,40 +328,28 @@ namespace Parser
         {
             try
             {
-                if (ayiklandimi == false)
-                {
-                    MessageBox.Show("Belgeler ayıklanmamış veya hazır değil!", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-                string tmp = Properties.Settings.Default.KayitYolu + @"\tmp";
-                string kayitYolu = Properties.Settings.Default.KayitYolu;
-                #region zipleme
-                List<string> ziplList = new List<string>();
-                foreach (var item in senaryoSayaci)
-                {
-                    var i = item;
-                    if (item.Key.IndexOf("_Sayac") == -1)
-                    {
-                        progressBar1.Maximum = item.Value;
-                        for (global::System.Int32 j = 1; j <= item.Value; j++)
-                        {
-                            progressBar1.Value += 1;
-                            var dizin = item.Key.ToString() + j.ToString();
-                            ziplList.Add(dizin + ".zip");
-                            zipIslem.dizinZiple(kayitYolu + @"\" + dizin, kayitYolu + @"\" + dizin + ".zip");
-                            Directory.Delete(kayitYolu + @"\" + dizin, true);
-                        }
-                    }
-                }
-                #endregion
-                TreeNode node = new TreeNode("Yeni saklama dosyaları (" + ziplList.Count.ToString() + ")");
-                listeyeEkle(ziplList, node);
-                agacListe.Nodes.Add(node);
-
+                ziple();
+                MessageBox.Show("İşlem tamamlandı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
+                statusTxt.Text = ex.Message.ToString();
+                MessageBox.Show(ex.Message.ToString(), "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
+        private void btn_taraveAyikla_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                tara();
+                ayikla();
+                ziple();
+                MessageBox.Show("İşlem tamamlandı.", "Bilgi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                statusTxt.Text = ex.Message.ToString();
                 MessageBox.Show(ex.Message.ToString(), "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

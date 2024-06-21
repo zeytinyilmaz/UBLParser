@@ -43,6 +43,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnAyarlar = new System.Windows.Forms.Button();
             this.btnziple = new System.Windows.Forms.Button();
+            this.btn_taraveAyikla = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -187,12 +188,26 @@
             this.btnziple.UseVisualStyleBackColor = false;
             this.btnziple.Click += new System.EventHandler(this.btnziple_Click);
             // 
+            // btn_taraveAyikla
+            // 
+            this.btn_taraveAyikla.BackColor = System.Drawing.Color.DimGray;
+            this.btn_taraveAyikla.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btn_taraveAyikla.ForeColor = System.Drawing.Color.White;
+            this.btn_taraveAyikla.Location = new System.Drawing.Point(604, 116);
+            this.btn_taraveAyikla.Name = "btn_taraveAyikla";
+            this.btn_taraveAyikla.Size = new System.Drawing.Size(78, 38);
+            this.btn_taraveAyikla.TabIndex = 14;
+            this.btn_taraveAyikla.Text = "Tara ve Ayıkla";
+            this.btn_taraveAyikla.UseVisualStyleBackColor = false;
+            this.btn_taraveAyikla.Click += new System.EventHandler(this.btn_taraveAyikla_Click);
+            // 
             // XMLParser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(694, 460);
+            this.Controls.Add(this.btn_taraveAyikla);
             this.Controls.Add(this.btnziple);
             this.Controls.Add(this.btnAyarlar);
             this.Controls.Add(this.label2);
@@ -238,5 +253,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnAyarlar;
         private System.Windows.Forms.Button btnziple;
+        private System.Windows.Forms.Button btn_taraveAyikla;
     }
 }

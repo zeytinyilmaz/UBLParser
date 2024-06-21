@@ -55,6 +55,7 @@ namespace Parser
             Properties.Settings.Default.paketSayisi = Convert.ToInt32(sayac.Value);
             Properties.Settings.Default.KayitYolu = txtkayitYeri.Text.ToString();
             Properties.Settings.Default.TaramaNoktasi = txtTaranacak.Text.ToString();
+            Properties.Settings.Default.asamaliAyiklama = chck_asamaliAyiklama.Checked;
             Properties.Settings.Default.Save();
             if (thisClose)
             {
