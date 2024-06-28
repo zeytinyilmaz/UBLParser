@@ -13,7 +13,7 @@ Uygulama imza değerlerinin ve hem UBL TR standartlarına göre hemde önceki en
 Uygulama yüklenirken yüklendiği kullanıcı bilgisayarındaki aktif kullanıcı hesabı için kendi içindeki ayarların olup olmadığını kontrol etmektedir. 
 Eğer program için bir yapılandırma yapılmamışsa yukarıda belirtilen kontrole istinaden ayar ekranı kullanıcıyı karşılamaktadır.
 
-![image](https://github.com/zeytinyilmaz/UBLParser/assets/11462101/34b46723-c809-49ce-b943-0296e3f849b8)
+![image](https://github.com/zeytinyilmaz/UBLParser/assets/11462101/df8407d4-467e-42b5-9cdc-23b6fe4ede93)
 
 Yukarıdaki ayar ekranından tarama yapmak için hedef olarak gösterilecek klasör yolu, tarama sonucunda ayıklama işlemnin sonucu oluşan fatura/irsaliye ubl dosyasının kaydedileceği dizin için "Dosyaların kayıt edileceği dizin" beklenmektedir. 
 Aynı zamanda yapılan ayıklama işlemi sırasında dosyalar dizin altına kayıt edilirken dizin altında en fazla kaç dosya bulundurulacağını belirlemek için "Dizin/Ziplenecek dosya sayısı" alanı ile dizin başına dosya sayısı belirlenebilmektedir.
