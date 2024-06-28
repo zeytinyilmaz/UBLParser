@@ -23,6 +23,7 @@ Bu aşamalar "Aşamalı Ayıklama ve Sıkıştırma" seçeneğinin tiklenmesine 
 İlgili seçeneğin tikinin kaldırılması durumunda bütün aşamalar uygulama tarafından tek bir buton ile otomatik olarak uygulanmaktadır.
 
 Ayarları kaydettikten sonra ana ekran olan tarama ve işlem ekranı gelmektedir.
+
 ![image](https://github.com/zeytinyilmaz/UBLParser/assets/11462101/26e0359f-f867-4bd8-a39d-5053c95fa90e)
 
 Bu ekrandan öncelikle Tara butonu ile tarama yapılmalıdır.
@@ -40,6 +41,7 @@ Ayıklama işlemi sonucu aşağıdaki gibi ayrı dizinler altında topluca tutul
 Dosya sayısı çok fazla ise paket sayısı alanında belirtilen miktar kadar dosyayı dizin altına attıktan sonra yeni bir dizin oluşturup devam etmektedir.
 
 Ayıklamanın ardından sıkıştırarak zip dosyası haline getirilmek isteniyorsa Sıkıştır butonunun kullanılması gerekmektedir.
+
 ![image](https://github.com/zeytinyilmaz/UBLParser/assets/11462101/da29b620-28cb-49ce-b33c-47ee8ea07280)
 
 Ardından sonucunu ekrana basıp bilgi verecektir.
